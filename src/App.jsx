@@ -40,6 +40,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-green-100 flex items-center justify-center p-4">
+      <FloatingElements />
       {screen === 1 && (
         <Screen1
           wrongClicks={wrongClicks}
@@ -228,6 +229,114 @@ function Screen3({ feedbackText, onChange, onSubmit, loading, error }) {
           'Gửi cho anh 💌'
         )}
       </button>
+    </div>
+  )
+}
+
+// CSS filter để tô màu bướm theo tone tím-xanh
+const BUTTERFLY_FILTERS = [
+  'hue-rotate(-50deg) saturate(1.4)',                    // tím đậm
+  'hue-rotate(-30deg) saturate(1.2)',                    // violet
+  'hue-rotate(-70deg) saturate(1.5) brightness(1.1)',    // hồng tím
+  'hue-rotate(30deg) saturate(1.1)',                     // xanh lá nhạt
+  '',                                                    // gốc xanh dương
+  'hue-rotate(-20deg) saturate(1.3) brightness(1.15)',   // lavender
+  'hue-rotate(50deg) saturate(1.2)',                     // mint xanh
+  'hue-rotate(200deg) saturate(1.3) brightness(1.1)',    // tím xanh
+]
+
+const BUTTERFLIES = [
+  { top: '6%',  dur: '19s', delay: '0s',    anim: 1, size: '2rem',   opacity: 0.70, flutter: '0.42s', fi: 0 },
+  { top: '18%', dur: '26s', delay: '-8s',   anim: 4, size: '1.6rem', opacity: 0.55, flutter: '0.36s', fi: 1 },
+  { top: '38%', dur: '17s', delay: '-4s',   anim: 2, size: '1.9rem', opacity: 0.65, flutter: '0.50s', fi: 5 },
+  { top: '62%', dur: '23s', delay: '-14s',  anim: 5, size: '1.4rem', opacity: 0.50, flutter: '0.40s', fi: 2 },
+  { top: '12%', dur: '31s', delay: '-20s',  anim: 3, size: '2.3rem', opacity: 0.60, flutter: '0.46s', fi: 3 },
+  { top: '75%', dur: '21s', delay: '-6s',   anim: 6, size: '1.7rem', opacity: 0.45, flutter: '0.38s', fi: 6 },
+  { top: '50%', dur: '27s', delay: '-23s',  anim: 1, size: '1.3rem', opacity: 0.55, flutter: '0.33s', fi: 4 },
+  { top: '28%', dur: '14s', delay: '-3s',   anim: 5, size: '1.8rem', opacity: 0.60, flutter: '0.48s', fi: 7 },
+  { top: '85%', dur: '22s', delay: '-11s',  anim: 2, size: '1.5rem', opacity: 0.45, flutter: '0.43s', fi: 1 },
+  { top: '44%', dur: '30s', delay: '-17s',  anim: 4, size: '2.0rem', opacity: 0.55, flutter: '0.37s', fi: 5 },
+  { top: '70%', dur: '16s', delay: '-7s',   anim: 3, size: '1.6rem', opacity: 0.50, flutter: '0.44s', fi: 3 },
+  { top: '22%', dur: '25s', delay: '-15s',  anim: 6, size: '1.2rem', opacity: 0.45, flutter: '0.35s', fi: 2 },
+  { top: '57%', dur: '20s', delay: '-2s',   anim: 1, size: '2.1rem', opacity: 0.60, flutter: '0.50s', fi: 6 },
+  { top: '33%', dur: '29s', delay: '-19s',  anim: 4, size: '1.5rem', opacity: 0.50, flutter: '0.41s', fi: 0 },
+]
+
+const PETAL_COLORS = [
+  '#e0b8f4', // tím nhạt
+  '#f2c8e4', // hồng tím
+  '#c8b8f0', // lavender
+  '#b8e8cc', // xanh mint
+  '#f0d8f0', // blush tím
+  '#cce0f5', // xanh lavender nhạt
+  '#d4f0dc', // xanh lá pastel
+]
+
+const PETALS = [
+  { left: '4%',  dur: '12s', delay: '0s',    v: 1, color: PETAL_COLORS[0], size: 14, opacity: 0.75 },
+  { left: '11%', dur: '15s', delay: '-4s',   v: 2, color: PETAL_COLORS[1], size: 18, opacity: 0.65 },
+  { left: '19%', dur: '10s', delay: '-7s',   v: 3, color: PETAL_COLORS[2], size: 12, opacity: 0.70 },
+  { left: '27%', dur: '14s', delay: '-2s',   v: 1, color: PETAL_COLORS[3], size: 16, opacity: 0.60 },
+  { left: '36%', dur: '11s', delay: '-9s',   v: 2, color: PETAL_COLORS[4], size: 20, opacity: 0.70 },
+  { left: '45%', dur: '13s', delay: '-5s',   v: 3, color: PETAL_COLORS[0], size: 13, opacity: 0.65 },
+  { left: '54%', dur: '16s', delay: '-12s',  v: 1, color: PETAL_COLORS[5], size: 17, opacity: 0.60 },
+  { left: '62%', dur: '9s',  delay: '-3s',   v: 2, color: PETAL_COLORS[1], size: 15, opacity: 0.70 },
+  { left: '70%', dur: '14s', delay: '-8s',   v: 3, color: PETAL_COLORS[6], size: 11, opacity: 0.65 },
+  { left: '79%', dur: '11s', delay: '-1s',   v: 1, color: PETAL_COLORS[2], size: 19, opacity: 0.60 },
+  { left: '87%', dur: '13s', delay: '-6s',   v: 2, color: PETAL_COLORS[3], size: 14, opacity: 0.70 },
+  { left: '93%', dur: '15s', delay: '-10s',  v: 3, color: PETAL_COLORS[4], size: 16, opacity: 0.65 },
+]
+
+function PetalSVG({ color, size }) {
+  const w = size
+  const h = Math.round(size * 1.7)
+  return (
+    <svg width={w} height={h} viewBox="0 0 20 34" fill="none">
+      <path d="M10 0 C18 6 19 16 10 34 C1 16 2 6 10 0Z" fill={color} />
+    </svg>
+  )
+}
+
+function FloatingElements() {
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+      {BUTTERFLIES.map((b, i) => (
+        <div
+          key={`b${i}`}
+          style={{
+            position: 'absolute',
+            top: b.top,
+            opacity: b.opacity,
+            animation: `fly-${b.anim} ${b.dur} linear ${b.delay} infinite`,
+          }}
+        >
+          <span
+            style={{
+              display: 'inline-block',
+              fontSize: b.size,
+              filter: BUTTERFLY_FILTERS[b.fi],
+              animation: `wing-flutter ${b.flutter} ease-in-out infinite`,
+            }}
+          >
+            🦋
+          </span>
+        </div>
+      ))}
+
+      {PETALS.map((p, i) => (
+        <div
+          key={`p${i}`}
+          style={{
+            position: 'absolute',
+            left: p.left,
+            top: 0,
+            opacity: p.opacity,
+            animation: `petal-fall-${p.v} ${p.dur} ease-in-out ${p.delay} infinite`,
+          }}
+        >
+          <PetalSVG color={p.color} size={p.size} />
+        </div>
+      ))}
     </div>
   )
 }
